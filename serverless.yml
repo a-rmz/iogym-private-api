@@ -1,0 +1,36 @@
+service: iogym-private
+frameworkVersion: ">=1.28.0 <2.0.0"
+provider:
+  name: aws
+  runtime: go1.x
+  stage: ${file(./.env.yml):stage}
+  region: ${file(./.env.yml):region}
+  role: ${file(./.env.yml):aws-role}
+  vpc:
+    securityGroups: ${file(./.env.yml):security-groups}
+    subnets: ${file(./.env.yml):subnets}
+  environment: ${file(./.env.yml):environment}
+
+package:
+ exclude:
+   - ./**
+ include:
+   - ./bin/**
+
+functions:
+  # Users
+  parseData:
+    handler: bin/parseData
+    events:
+      - iot:
+          sql: "SELECT * FROM 'arduino/bicycle/data'"
+  parseLogin:
+    handler: bin/parseLogin
+    events:
+      - iot:
+          sql: "SELECT * FROM 'arduino/bicycle/login'"
+  parseLogout:
+    handler: bin/parseLogout
+    events:
+      - iot:
+          sql: "SELECT * FROM 'arduino/bicycle/logout'"

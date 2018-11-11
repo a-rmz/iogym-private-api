@@ -1,0 +1,11 @@
+# package directories
+bin
+
+# Serverless directories
+.serverless
+
+# configurations
+.env.yml
+
+# go tags
+tags
