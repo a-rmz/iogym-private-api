@@ -28,9 +28,9 @@ functions:
     handler: bin/parseLogin
     events:
       - iot:
-          sql: "SELECT * FROM 'arduino/bicycle/login'"
+          sql: "SELECT * FROM 'arduino/bicycle/start'"
   parseLogout:
     handler: bin/parseLogout
     events:
       - iot:
-          sql: "SELECT * FROM 'arduino/bicycle/logout'"
+          sql: "SELECT * FROM 'arduino/bicycle/end'"
