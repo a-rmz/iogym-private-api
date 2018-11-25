@@ -17,12 +17,14 @@ import (
 // Response is of type APIGatewayProxyResponse since we're leveraging the
 // AWS Lambda Proxy Request functionality (default behavior)
 
-type Request string
+type Request struct {
+  Data string `json:"data"`
+}
 type Response events.APIGatewayProxyResponse
 
 // Incoming text format is as follows:
 //   00000000;FFFFFFFF;2-10-201810:00:05;2-10-201810:00:05;10
-func parseData(requestID string, request Request) models.SessionFrame {
+func parseData(requestID string, request string) models.SessionFrame {
   tokens := strings.Split(fmt.Sprintf("%s", request), ";") 
   userId := tokens[0]
   deviceId := tokens[1]
@@ -52,7 +54,7 @@ func parseData(requestID string, request Request) models.SessionFrame {
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, request Request) (Response, error) {
   lc, _ := lambdacontext.FromContext(ctx)
-  frame := parseData(lc.AwsRequestID, request)
+  frame := parseData(lc.AwsRequestID, request.Data)
   
   models.InsertSessionFrame(frame)
 
